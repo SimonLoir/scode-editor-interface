@@ -1,6 +1,6 @@
-import { $, ExtJsObject } from './extjs';
-import './scss/simonloir.scode.hl.scss';
-import h from './hl';
+import { $, ExtJsObject } from "./extjs";
+import "./scss/simonloir.scode.hl.scss";
+import h from "./hl";
 export default class {
     private e: ExtJsObject;
     private editor: ExtJsObject;
@@ -8,19 +8,21 @@ export default class {
     constructor(e: any) {
         this.e = $(e);
 
-        if (window.getComputedStyle(this.e.get(0)).position == 'static')
-            this.e.css('position', 'relative');
+        if (window.getComputedStyle(this.e.get(0)).position == "static")
+            this.e.css("position", "relative");
 
-        let textarea: ExtJsObject = this.e.child('div');
-        textarea.addClass('code-editor-colors');
-        textarea.css('overflow', 'auto');
-        textarea.attr('contenteditable', 'true');
+        let textarea: ExtJsObject = this.e.child("div");
+        textarea.addClass("code-editor-colors");
+        textarea.css("overflow", "auto");
+        textarea.attr("contenteditable", "true");
         textarea.get(0).focus();
-        document.execCommand('formatBlock', false, '<div>');
+        document.execCommand("formatBlock", false, "<div>");
 
-        let lines: ExtJsObject = this.e.child('div').html('<div>1</div>');
-        lines.addClass('line-numbers');
-        lines.css('overflow', 'hidden');
+        this.editor = textarea;
+
+        let lines: ExtJsObject = this.e.child("div").html("<div>1</div>");
+        lines.addClass("line-numbers");
+        lines.css("overflow", "hidden");
 
         textarea.get(0).onscroll = function() {
             lines.get(0).scrollTop = this.scrollTop;
@@ -32,29 +34,33 @@ export default class {
                     .parentElement
             );
 
-            if (div.get(0).tagName.toLowerCase() != 'div') {
-                div = div.parent('div');
+            if (div.get(0).tagName.toLowerCase() != "div") {
+                div = div.parent("div");
             }
 
-            if (div.hasClass('code-editor-colors') == true) return;
+            if (div.hasClass("code-editor-colors") == true) return;
             if (e.keyCode == 13 || e.keyCode == 38 || e.keyCode == 40) return;
             let pos = toolkit.getCursorPosition(div.get(0));
-            h.chooseHighlighter('js')(div, div.text());
+            h.chooseHighlighter("js")(div, div.text());
             toolkit.setCaretPos(div.get(0), pos);
         });
 
         textarea.keyup((e: KeyboardEvent) => {
             if (e.keyCode == 13 || e.keyCode == 8 || e.keyCode == 46) {
-                let numbers = lines.children('div');
-                let nbr_of_lines = textarea.children('div').count();
+                let numbers = lines.children("div");
+                let nbr_of_lines = textarea.children("div").count();
                 if (numbers.count() > nbr_of_lines) numbers.remove(-2);
                 else if (numbers.count() < nbr_of_lines)
-                    lines.child('div').text(nbr_of_lines.toString());
+                    lines.child("div").text(nbr_of_lines.toString());
                 /*textarea.children('div').forEach(function() {
                     if ($(this).html() == '') $(this).html('<br />');
                 });*/
             }
         });
+    }
+
+    public getContent() {
+        return this.editor.text();
     }
 }
 

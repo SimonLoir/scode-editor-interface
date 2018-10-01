@@ -5,8 +5,18 @@ export default class {
     private e: ExtJsObject;
     private editor: ExtJsObject;
     private lines: ExtJsObject;
+    private type: string;
+
     constructor(e: any) {
         this.e = $(e);
+        if (this.e.attr("data-type") != "")
+            this.type = this.e.attr("data-type");
+        if (this.type == undefined) this.type = "js";
+        this.init();
+    }
+
+    public init() {
+        this.e.html("");
 
         if (window.getComputedStyle(this.e.get(0)).position == "static")
             this.e.css("position", "relative");
@@ -41,7 +51,7 @@ export default class {
             if (div.hasClass("code-editor-colors") == true) return;
             if (e.keyCode == 13 || e.keyCode == 38 || e.keyCode == 40) return;
             let pos = toolkit.getCursorPosition(div.get(0));
-            h.chooseHighlighter("js")(div, div.text());
+            h.chooseHighlighter(this.type)(div, div.text());
             toolkit.setCaretPos(div.get(0), pos);
         });
 
@@ -52,10 +62,20 @@ export default class {
                 if (numbers.count() > nbr_of_lines) numbers.remove(-2);
                 else if (numbers.count() < nbr_of_lines)
                     lines.child("div").text(nbr_of_lines.toString());
-                /*textarea.children('div').forEach(function() {
-                    if ($(this).html() == '') $(this).html('<br />');
-                });*/
             }
+        });
+
+        let select = this.e.child("select");
+        [this.type, "js", "html"].forEach(e => {
+            select
+                .child("option")
+                .text(e)
+                .value(e);
+        });
+        select.change(() => {
+            this.type = select.value();
+            this.init();
+            this.e.attr("data-type", this.type);
         });
     }
 

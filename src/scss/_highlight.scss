@@ -48,7 +48,7 @@
 }
 
 .code-editor-colors {
-    @if $text-editor-shadow != 'none' {
+    @if $text-editor-shadow != "none" {
         -webkit-text-stroke: 1px $text-editor-shadow;
     }
     font-size: $editor-default-font-size;
@@ -155,4 +155,13 @@ $scrollbar-thumb-hover: rgba(255, 255, 255, 0.5);
 ::-webkit-scrollbar-thumb:hover {
     -webkit-app-region: no-drag;
     background: $scrollbar-thumb-hover;
+}
+
+select {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: none;
+    color: white;
+    background: transparent;
 }

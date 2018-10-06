@@ -72,6 +72,7 @@ export default class {
                 let target: HTMLDListElement = this.getTarget(e);
                 let nextSibling = target.nextSibling;
                 let new_line;
+                let pos = toolkit.getCursorPosition(target);
                 if (nextSibling != undefined) {
                     new_line = textarea
                         .get(0)
@@ -82,9 +83,52 @@ export default class {
                 } else {
                     new_line = textarea.child("div").get(0);
                 }
+                //toolkit.setSelectionRange(target, pos, target.innerText.length);
 
+                let nl_text = target.innerText.substring(
+                    pos,
+                    target.innerText.length
+                );
+                target.innerText = target.innerText.substring(0, pos);
+                new_line.innerText = nl_text;
                 this.line($(new_line));
                 new_line.focus();
+                this.hl($(target), target.innerText);
+                this.hl($(new_line), new_line.innerText);
+                toolkit.setCaretPos(new_line, 0);
+            } else if (e.keyCode == 8) {
+                let target: HTMLDivElement = this.getTarget(e);
+                let tpos = toolkit.getCursorPosition(target);
+                if (tpos == 0 || !tpos)
+                    if (target != textarea.children("div").get(0)) {
+                        e.preventDefault();
+                        let prev = target.previousSibling;
+                        if (target.innerText == "") {
+                            console.log("d");
+                            $(target).remove();
+                            //@ts-ignore
+                            prev.focus();
+                            //@ts-ignore
+                            toolkit.setCaretPos(prev, prev.innerText.length);
+                        } else {
+                            //@ts-ignore
+                            let pos: number = prev.innerText.length;
+                            //@ts-ignore
+                            prev.focus();
+                            toolkit.setCaretPos(prev, pos);
+                            document.execCommand(
+                                "insertText",
+                                null,
+                                target.innerText
+                            );
+                            toolkit.setCaretPos(prev, pos);
+                            $(target).remove();
+                        }
+                        let pos = toolkit.getCursorPosition(prev);
+                        //@ts-ignore
+                        this.hl($(prev), prev.innerText);
+                        toolkit.setCaretPos(prev, pos);
+                    }
             }
         });
 
@@ -189,4 +233,50 @@ class toolkit {
         selection.removeAllRanges();
         selection.addRange(range);
     }
+
+    public static setSelectionRange(el: any, start: number, end: number) {
+        if (document.createRange && window.getSelection) {
+            var range = document.createRange();
+            range.selectNodeContents(el);
+            var textNodes = getTextNodesIn(el);
+            var foundStart = false;
+            var charCount = 0,
+                endCharCount;
+
+            for (var i = 0, textNode; (textNode = textNodes[i++]); ) {
+                endCharCount = charCount + textNode.length;
+                if (
+                    !foundStart &&
+                    start >= charCount &&
+                    (start < endCharCount ||
+                        (start == endCharCount && i <= textNodes.length))
+                ) {
+                    range.setStart(textNode, start - charCount);
+                    foundStart = true;
+                }
+                if (foundStart && end <= endCharCount) {
+                    range.setEnd(textNode, end - charCount);
+                    break;
+                }
+                charCount = endCharCount;
+            }
+
+            var sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
+    }
+}
+
+function getTextNodesIn(node: any) {
+    var textNodes: any = [];
+    if (node.nodeType == 3) {
+        textNodes.push(node);
+    } else {
+        var children = node.childNodes;
+        for (var i = 0, len = children.length; i < len; ++i) {
+            textNodes.push.apply(textNodes, getTextNodesIn(children[i]));
+        }
+    }
+    return textNodes;
 }

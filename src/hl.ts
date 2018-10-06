@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { ExtJsObject } from './extjs';
+import { ExtJsObject } from "./extjs";
 
 export default class Highlighter {
     public static hl: any;
@@ -16,100 +16,100 @@ export default class Highlighter {
         let element_before: HTMLElement = element.get(0).previousSibling;
 
         let keywords: Array<string> = [
-            'abstract',
-            'arguments',
-            'await',
-            'boolean',
-            'break',
-            'byte',
-            'case',
-            'catch',
-            'char',
-            'class',
-            'const',
-            'continue',
-            'debugger',
-            'default',
-            'delete',
-            'do',
-            'double',
-            'else',
-            'enum',
-            'eval',
-            'export',
-            'extends',
-            'false',
-            'final',
-            'finally',
-            'float',
-            'for',
-            'function',
-            'goto',
-            'if',
-            'implements',
-            'import',
-            'in',
-            'instanceof',
-            'int',
-            'interface',
-            'let',
-            'long',
-            'native',
-            'new',
-            'null',
-            'package',
-            'private',
-            'protected',
-            'public',
-            'return',
-            'short',
-            'static',
-            'super',
-            'switch',
-            'synchronized',
-            'this',
-            'throw',
-            'throws',
-            'transient',
-            'true',
-            'try',
-            'typeof',
-            'var',
-            'void',
-            'volatile',
-            'while',
-            'with',
-            'yield'
+            "abstract",
+            "arguments",
+            "await",
+            "boolean",
+            "break",
+            "byte",
+            "case",
+            "catch",
+            "char",
+            "class",
+            "const",
+            "continue",
+            "debugger",
+            "default",
+            "delete",
+            "do",
+            "double",
+            "else",
+            "enum",
+            "eval",
+            "export",
+            "extends",
+            "false",
+            "final",
+            "finally",
+            "float",
+            "for",
+            "function",
+            "goto",
+            "if",
+            "implements",
+            "import",
+            "in",
+            "instanceof",
+            "int",
+            "interface",
+            "let",
+            "long",
+            "native",
+            "new",
+            "null",
+            "package",
+            "private",
+            "protected",
+            "public",
+            "return",
+            "short",
+            "static",
+            "super",
+            "switch",
+            "synchronized",
+            "this",
+            "throw",
+            "throws",
+            "transient",
+            "true",
+            "try",
+            "typeof",
+            "var",
+            "void",
+            "volatile",
+            "while",
+            "with",
+            "yield"
         ];
 
         let operators: Array<string> = [
-            ';',
-            ',',
-            '=',
-            '!',
-            '.',
-            '{',
-            '}',
-            '[',
-            ']',
-            '(',
-            ')',
-            '>',
-            '<',
-            '+',
-            '-',
-            '*',
-            '/',
-            ':'
+            ";",
+            ",",
+            "=",
+            "!",
+            ".",
+            "{",
+            "}",
+            "[",
+            "]",
+            "(",
+            ")",
+            ">",
+            "<",
+            "+",
+            "-",
+            "*",
+            "/",
+            ":"
         ];
 
-        let string_start: Array<string> = ['"', "'", '`'];
+        let string_start: Array<string> = ['"', "'", "`"];
 
-        let c: string = '';
+        let c: string = "";
 
-        let buffer: string = '';
+        let buffer: string = "";
 
-        let type: String = 'default';
+        let type: String = "default";
 
         let string_type: string;
 
@@ -117,83 +117,83 @@ export default class Highlighter {
 
         let comment_start;
 
-        let comment_state_now = element.get(0).dataset['comment'];
+        let comment_state_now = element.get(0).dataset["comment"];
 
         if (element_before != undefined) {
-            let before = element_before.dataset['comment'];
-            if (before == '*') {
-                comment_type = '*';
-                type = 'comment';
+            let before = element_before.dataset["comment"];
+            if (before == "*") {
+                comment_type = "*";
+                type = "comment";
             }
         }
 
-        element.html('');
+        element.html("");
 
         function cleanBuffer(c: any, buffer: any, char: any, type: any) {
-            if (type == 'default') {
-                if (char == '(') {
+            if (type == "default") {
+                if (char == "(") {
                     c += `<span class="function">${buffer}</span>`;
                 } else if (keywords.indexOf(buffer) >= 0) {
                     c += `<span class="keyword1">${buffer}</span>`;
                 } else {
                     c += buffer;
                 }
-            } else if (type == 'string') {
+            } else if (type == "string") {
                 c += `<span class="string">${buffer}</span>`;
-            } else if (type == 'comment') {
+            } else if (type == "comment") {
                 c += `<span class="comment">${buffer}</span>`;
             }
-            buffer = '';
+            buffer = "";
             return { c, buffer };
         }
 
         for (let i = 0; i < code.length; i++) {
             let char = code[i];
-            if (char == ' ') {
+            if (char == " ") {
                 ({ c, buffer } = cleanBuffer(c, buffer, char, type));
 
-                c += ' ';
-                buffer = '';
+                c += " ";
+                buffer = "";
             } else {
-                if (char == '&') char = '&amp;';
+                if (char == "&") char = "&amp;";
 
                 if (
-                    type == 'default' &&
-                    char == '/' &&
-                    (code[i + 1] == '/' || code[i + 1] == '*')
+                    type == "default" &&
+                    char == "/" &&
+                    (code[i + 1] == "/" || code[i + 1] == "*")
                 ) {
                     ({ c, buffer } = cleanBuffer(c, buffer, char, type));
-                    type = 'comment';
+                    type = "comment";
                     buffer += char;
                     comment_type = code[i + 1];
                     comment_start = i;
                 } else if (
-                    type == 'comment' &&
-                    char == '/' &&
-                    code[i - 1] == '*' &&
+                    type == "comment" &&
+                    char == "/" &&
+                    code[i - 1] == "*" &&
                     i - 2 != comment_start
                 ) {
                     buffer += char;
                     ({ c, buffer } = cleanBuffer(c, buffer, char, type));
-                    type = 'default';
-                    comment_type = '';
-                } else if (operators.indexOf(char) >= 0 && type == 'default') {
+                    type = "default";
+                    comment_type = "";
+                } else if (operators.indexOf(char) >= 0 && type == "default") {
                     ({ c, buffer } = cleanBuffer(c, buffer, char, type));
 
                     c += `<span class="operator">${char}</span>`;
                 } else if (
-                    type == 'string' &&
+                    type == "string" &&
                     char == string_type &&
-                    code[i - 1] != '\\'
+                    code[i - 1] != "\\"
                 ) {
                     buffer += char;
                     ({ c, buffer } = cleanBuffer(c, buffer, char, type));
-                    type = 'default';
+                    type = "default";
                 } else if (
-                    type == 'default' &&
+                    type == "default" &&
                     string_start.indexOf(char) >= 0
                 ) {
-                    type = 'string';
+                    type = "string";
                     buffer += char;
                     string_type = char;
                 } else {
@@ -205,24 +205,25 @@ export default class Highlighter {
             }
         }
 
-        if (type == 'comment' && comment_type != '') {
-            element.get(0).dataset['comment'] = comment_type;
+        if (type == "comment" && comment_type != "") {
+            element.get(0).dataset["comment"] = comment_type;
         } else {
-            element.get(0).dataset['comment'] = '';
+            element.get(0).dataset["comment"] = "";
         }
 
         element.html(c);
-        element.addClass('default2');
-        element.addClass('object');
+        element.addClass("default2");
+        element.addClass("object");
 
         if (isInputEvent == true && comment_type != comment_state_now) {
-            /*let editor = this;
+            let editor = this;
+            //@ts-ignore
             function wait(e) {
                 if (e.get(0).nextSibling != undefined) {
                     editor.hl(e.nextSibling(), e.nextSibling().text());
                 }
             }
-            wait(element);*/
+            wait(element);
         }
 
         return true;
@@ -235,9 +236,9 @@ export default class Highlighter {
     ) {}
 
     public static chooseHighlighter(type: string) {
-        if (['js', 'json', 'ts'].indexOf(type) >= 0) {
+        if (["js", "json", "ts"].indexOf(type) >= 0) {
             return this.js;
-        } else if (['htm', 'html5', 'html', 'xml'].indexOf(type) >= 0) {
+        } else if (["htm", "html5", "html", "xml"].indexOf(type) >= 0) {
             return this.xml;
         } else {
             alert(

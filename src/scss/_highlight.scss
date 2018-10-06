@@ -26,29 +26,14 @@
         background: transparent;
     }
     pointer-events: none;
-}
-
-.code-editor-search {
-    background: transparent;
-    position: absolute;
-    top: 0;
-    left: 45px;
-    right: 0;
-    bottom: 0;
-    padding: 25px;
-    font-family: $font-family, sans-serif;
-    color: transparent;
-    overflow: auto;
-    font-size: $editor-default-font-size;
-    margin: 0;
-    width: calc(100% - 95px);
-    height: calc(100% - 50px);
-    border: none;
-    white-space: nowrap;
+    & div {
+        border-bottom: 1px solid transparent;
+        border-top: 1px solid transparent;
+    }
 }
 
 .code-editor-colors {
-    @if $text-editor-shadow !="none" {
+    @if $text-editor-shadow != "none" {
         -webkit-text-stroke: 1px $text-editor-shadow;
     }
     font-size: $editor-default-font-size;
@@ -59,8 +44,7 @@
     bottom: 0;
     padding: 25px;
     padding-left: 25px;
-    font-family: $font-family,
-    sans-serif;
+    font-family: $font-family, sans-serif;
     background: $code-editor-default-background;
     color: $code-editor-default-color;
     overflow: auto;
@@ -70,14 +54,14 @@
     border: none;
     white-space: nowrap;
     overflow: hidden;
-    & pre,
+    & div,
     & span {
         padding: 0;
         margin: 0;
         font-size: $editor-default-font-size;
         font-family: $font-family, sans-serif;
     }
-    & pre {
+    & div {
         color: $code-editor-default-color;
         &.default1 {
             color: $color-default1;
@@ -85,10 +69,12 @@
         &.default2 {
             color: $color-default2;
         }
+        border-bottom: 1px solid transparent;
+        border-top: 1px solid transparent;
         &:focus {
-            //border-top:1px solid rgba(255,255,255,0.1);
-            //border-bottom:1px solid rgba(255,255,255,0.1);
-            background: rgba(255, 255, 255, 0.01);
+            //background: rgba(255, 255, 255, 0.01);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
     }
 }

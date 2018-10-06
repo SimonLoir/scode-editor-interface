@@ -6,10 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>SCode editor</title>
+    <style>
+        body {
+            background: rgb(25, 25, 25);
+            font-family: sans-serif;
+        }
+
+        #editor {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.05);
+        }
+    </style>
 </head>
 
 <body>
-    <div id="editor" style="height:500px; width:500px;"></div>
+    <h1 style="color:white;text-align:center;padding: 25px;">SCode Editor Demo</h1>
+    <div id="editor" style="height:75vh; width:75vw;"></div>
     <script src="lib/seditor.min.js"></script>
     <script>new seditor.editor('#editor')</script>
 </body>

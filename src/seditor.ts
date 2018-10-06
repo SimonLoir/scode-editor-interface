@@ -6,7 +6,7 @@ export default class {
     private editor: ExtJsObject;
     private lines: ExtJsObject;
     private type: string;
-
+    private hl: (element: ExtJsObject, code: string, isInput?: boolean) => void;
     constructor(e: any) {
         this.e = $(e);
         if (this.e.attr("data-type") != "")
@@ -15,7 +15,18 @@ export default class {
         this.init();
     }
 
-    public init() {
+    public getTarget(e: KeyboardEvent) {
+        let target: any = e.target;
+        if (!target.classList.contains("scode-editor-line")) {
+            target = $(target)
+                .parent(".scode-editor-line")
+                .get(0);
+        }
+        return target;
+    }
+
+    public init(default_text: string = "") {
+        this.hl = h.chooseHighlighter(this.type);
         this.e.html("");
 
         if (window.getComputedStyle(this.e.get(0)).position == "static")
@@ -24,9 +35,8 @@ export default class {
         let textarea: ExtJsObject = this.e.child("div");
         textarea.addClass("code-editor-colors");
         textarea.css("overflow", "auto");
-        textarea.attr("contenteditable", "true");
+        textarea.attr("contenteditable", "false");
         textarea.get(0).focus();
-        document.execCommand("formatBlock", false, "<div>");
 
         this.editor = textarea;
 
@@ -38,30 +48,43 @@ export default class {
             lines.get(0).scrollTop = this.scrollTop;
         };
 
-        textarea.keyup((e: KeyboardEvent) => {
-            let div = $(
-                document.getSelection().getRangeAt(0).startContainer
-                    .parentElement
-            );
-
-            if (div.get(0).tagName.toLowerCase() != "div") {
-                div = div.parent("div");
-            }
-
-            if (div.hasClass("code-editor-colors") == true) return;
-            if (e.keyCode == 13 || e.keyCode == 38 || e.keyCode == 40) return;
-            let pos = toolkit.getCursorPosition(div.get(0));
-            h.chooseHighlighter(this.type)(div, div.text());
-            toolkit.setCaretPos(div.get(0), pos);
+        let spl = default_text.split(/\r?\n/);
+        spl.forEach(e => {
+            this.line(textarea.child("div"));
         });
 
-        textarea.keyup((e: KeyboardEvent) => {
-            if (e.keyCode == 13 || e.keyCode == 8 || e.keyCode == 46) {
-                let numbers = lines.children("div");
-                let nbr_of_lines = textarea.children("div").count();
-                if (numbers.count() > nbr_of_lines) numbers.remove(-2);
-                else if (numbers.count() < nbr_of_lines)
-                    lines.child("div").text(nbr_of_lines.toString());
+        textarea
+            .children("div")
+            .only(0)
+            .get(0)
+            .focus();
+
+        textarea.input((e: KeyboardEvent) => {
+            let target = this.getTarget(e);
+            let pos = toolkit.getCursorPosition(target);
+            this.hl($(target), $(target).text());
+            toolkit.setCaretPos(target, pos);
+        });
+
+        textarea.keydown((e: KeyboardEvent) => {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                let target: HTMLDListElement = this.getTarget(e);
+                let nextSibling = target.nextSibling;
+                let new_line;
+                if (nextSibling != undefined) {
+                    new_line = textarea
+                        .get(0)
+                        .insertBefore(
+                            document.createElement("div"),
+                            nextSibling
+                        );
+                } else {
+                    new_line = textarea.child("div").get(0);
+                }
+
+                this.line($(new_line));
+                new_line.focus();
             }
         });
 
@@ -77,6 +100,12 @@ export default class {
             this.init();
             this.e.attr("data-type", this.type);
         });
+    }
+
+    private line(e: ExtJsObject) {
+        e.addClass("scode-editor-line")
+            .attr("contenteditable", "true")
+            .css("white-space", "pre");
     }
 
     public getContent() {

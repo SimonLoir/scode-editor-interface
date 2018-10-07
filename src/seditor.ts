@@ -36,6 +36,7 @@ export default class {
         textarea.addClass("code-editor-colors");
         textarea.css("overflow", "auto");
         textarea.attr("contenteditable", "false");
+        textarea.attr("spellcheck", "false");
         textarea.get(0).focus();
 
         this.editor = textarea;
@@ -43,6 +44,14 @@ export default class {
         let lines: ExtJsObject = this.e.child("div").html("<div>1</div>");
         lines.addClass("line-numbers");
         lines.css("overflow", "hidden");
+
+        const updateLN = () => {
+            let numbers = lines.children("div");
+            let nbr_of_lines = textarea.children("div").count();
+            if (numbers.count() > nbr_of_lines) numbers.remove(-2);
+            else if (numbers.count() < nbr_of_lines)
+                lines.child("div").text(nbr_of_lines.toString());
+        };
 
         textarea.get(0).onscroll = function() {
             lines.get(0).scrollTop = this.scrollTop;
@@ -96,6 +105,7 @@ export default class {
                 this.hl($(target), target.innerText);
                 this.hl($(new_line), new_line.innerText);
                 toolkit.setCaretPos(new_line, 0);
+                updateLN();
             } else if (e.keyCode == 8) {
                 let target: HTMLDivElement = this.getTarget(e);
                 let tpos = toolkit.getCursorPosition(target);
@@ -106,6 +116,8 @@ export default class {
                         if (target.innerText == "") {
                             console.log("d");
                             $(target).remove();
+                            updateLN();
+
                             //@ts-ignore
                             prev.focus();
                             //@ts-ignore
@@ -123,6 +135,7 @@ export default class {
                             );
                             toolkit.setCaretPos(prev, pos);
                             $(target).remove();
+                            updateLN();
                         }
                         let pos = toolkit.getCursorPosition(prev);
                         //@ts-ignore

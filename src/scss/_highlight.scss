@@ -33,6 +33,7 @@
 }
 
 .code-editor-colors {
+    text-align: left;
     @if $text-editor-shadow != "none" {
         -webkit-text-stroke: 1px $text-editor-shadow;
     }
@@ -72,7 +73,6 @@
         border-bottom: 1px solid transparent;
         border-top: 1px solid transparent;
         &:focus {
-            //background: rgba(255, 255, 255, 0.01);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
@@ -91,6 +91,10 @@
 
 .keyword1 {
     color: $color-keyword1;
+}
+
+.keyword2 {
+    color: $color-keyword2;
 }
 
 .function {

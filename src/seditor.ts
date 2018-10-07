@@ -1,6 +1,6 @@
-import { $, ExtJsObject } from "./extjs";
-import "./scss/simonloir.scode.hl.scss";
-import h from "./hl";
+import { $, ExtJsObject } from './extjs';
+import './scss/simonloir.scode.hl.scss';
+import h from './hl';
 export default class {
     private e: ExtJsObject;
     private editor: ExtJsObject;
@@ -9,48 +9,48 @@ export default class {
     private hl: (element: ExtJsObject, code: string, isInput?: boolean) => void;
     constructor(e: any) {
         this.e = $(e);
-        if (this.e.attr("data-type") != "")
-            this.type = this.e.attr("data-type");
-        if (this.type == undefined) this.type = "js";
+        if (this.e.attr('data-type') != '')
+            this.type = this.e.attr('data-type');
+        if (this.type == undefined) this.type = 'js';
         this.init();
     }
 
     public getTarget(e: KeyboardEvent) {
         let target: any = e.target;
-        if (!target.classList.contains("scode-editor-line")) {
+        if (!target.classList.contains('scode-editor-line')) {
             target = $(target)
-                .parent(".scode-editor-line")
+                .parent('.scode-editor-line')
                 .get(0);
         }
         return target;
     }
 
-    public init(default_text: string = "") {
+    public init(default_text: string = '') {
         this.hl = h.chooseHighlighter(this.type);
-        this.e.html("");
+        this.e.html('');
 
-        if (window.getComputedStyle(this.e.get(0)).position == "static")
-            this.e.css("position", "relative");
+        if (window.getComputedStyle(this.e.get(0)).position == 'static')
+            this.e.css('position', 'relative');
 
-        let textarea: ExtJsObject = this.e.child("div");
-        textarea.addClass("code-editor-colors");
-        textarea.css("overflow", "auto");
-        textarea.attr("contenteditable", "false");
-        textarea.attr("spellcheck", "false");
+        let textarea: ExtJsObject = this.e.child('div');
+        textarea.addClass('code-editor-colors');
+        textarea.css('overflow', 'auto');
+        textarea.attr('contenteditable', 'false');
+        textarea.attr('spellcheck', 'false');
         textarea.get(0).focus();
 
         this.editor = textarea;
 
-        let lines: ExtJsObject = this.e.child("div").html("<div>1</div>");
-        lines.addClass("line-numbers");
-        lines.css("overflow", "hidden");
+        let lines: ExtJsObject = this.e.child('div').html('<div>1</div>');
+        lines.addClass('line-numbers');
+        lines.css('overflow', 'hidden');
 
         const updateLN = () => {
-            let numbers = lines.children("div");
-            let nbr_of_lines = textarea.children("div").count();
+            let numbers = lines.children('div');
+            let nbr_of_lines = textarea.children('div').count();
             if (numbers.count() > nbr_of_lines) numbers.remove(-2);
             else if (numbers.count() < nbr_of_lines)
-                lines.child("div").text(nbr_of_lines.toString());
+                lines.child('div').text(nbr_of_lines.toString());
         };
 
         textarea.get(0).onscroll = function() {
@@ -59,11 +59,11 @@ export default class {
 
         let spl = default_text.split(/\r?\n/);
         spl.forEach(e => {
-            this.line(textarea.child("div"));
+            this.line(textarea.child('div'));
         });
 
         textarea
-            .children("div")
+            .children('div')
             .only(0)
             .get(0)
             .focus();
@@ -78,6 +78,7 @@ export default class {
         textarea.keydown((e: KeyboardEvent) => {
             if (e.keyCode == 13) {
                 e.preventDefault();
+                e.stopPropagation();
                 let target: HTMLDListElement = this.getTarget(e);
                 let nextSibling = target.nextSibling;
                 let new_line;
@@ -86,11 +87,11 @@ export default class {
                     new_line = textarea
                         .get(0)
                         .insertBefore(
-                            document.createElement("div"),
+                            document.createElement('div'),
                             nextSibling
                         );
                 } else {
-                    new_line = textarea.child("div").get(0);
+                    new_line = textarea.child('div').get(0);
                 }
                 //toolkit.setSelectionRange(target, pos, target.innerText.length);
 
@@ -109,12 +110,14 @@ export default class {
             } else if (e.keyCode == 8) {
                 let target: HTMLDivElement = this.getTarget(e);
                 let tpos = toolkit.getCursorPosition(target);
+                e.stopPropagation();
                 if (tpos == 0 || !tpos)
-                    if (target != textarea.children("div").get(0)) {
+                    if (target != textarea.children('div').get(0)) {
                         e.preventDefault();
+
                         let prev = target.previousSibling;
-                        if (target.innerText == "") {
-                            console.log("d");
+                        if (target.innerText == '') {
+                            console.log('d');
                             $(target).remove();
                             updateLN();
 
@@ -129,7 +132,7 @@ export default class {
                             prev.focus();
                             toolkit.setCaretPos(prev, pos);
                             document.execCommand(
-                                "insertText",
+                                'insertText',
                                 null,
                                 target.innerText
                             );
@@ -145,24 +148,24 @@ export default class {
             }
         });
 
-        let select = this.e.child("select");
-        [this.type, "js", "html"].forEach(e => {
+        let select = this.e.child('select');
+        [this.type, 'js', 'html'].forEach(e => {
             select
-                .child("option")
+                .child('option')
                 .text(e)
                 .value(e);
         });
         select.change(() => {
             this.type = select.value();
             this.init();
-            this.e.attr("data-type", this.type);
+            this.e.attr('data-type', this.type);
         });
     }
 
     private line(e: ExtJsObject) {
-        e.addClass("scode-editor-line")
-            .attr("contenteditable", "true")
-            .css("white-space", "pre");
+        e.addClass('scode-editor-line')
+            .attr('contenteditable', 'true')
+            .css('white-space', 'pre');
     }
 
     public getContent() {

@@ -34,7 +34,7 @@
 
 .code-editor-colors {
     text-align: left;
-    @if $text-editor-shadow != "none" {
+    @if $text-editor-shadow != 'none' {
         -webkit-text-stroke: 1px $text-editor-shadow;
     }
     font-size: $editor-default-font-size;
@@ -97,6 +97,10 @@
     color: $color-keyword2;
 }
 
+.object {
+    color: $color-objects;
+}
+
 .function {
     color: $color-function;
 }
@@ -113,8 +117,8 @@
     color: $color-operators;
 }
 
-$scrollbar-thumb: rgba(255, 255, 255, 0.05);
-$scrollbar-thumb-hover: rgba(255, 255, 255, 0.5);
+$scrollbar-thumb: rgb(41, 41, 41);
+$scrollbar-thumb-hover: rgb(143, 143, 143);
 ::-webkit-scrollbar {
     -webkit-app-region: no-drag;
     width: 12px;

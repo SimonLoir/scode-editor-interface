@@ -10,6 +10,7 @@ export default class Parser {
     private inlineComments: string[] = [];
     private commentsCloseReverse: string[] = [];
     private comments: string[] = [];
+    private objects: string[] = [];
     constructor(data: string = '') {
         this.parse(data);
     }
@@ -29,6 +30,8 @@ export default class Parser {
                 this.commands.push(
                     JSON.parse(line.replace('set command ', ''))
                 );
+            } else if (line.indexOf('set object ') == 0) {
+                this.objects.push(JSON.parse(line.replace('set object ', '')));
             } else if (line.indexOf('set string.inline ') == 0) {
                 this.inlineStrings.push(
                     JSON.parse(line.replace('set string.inline ', ''))
@@ -85,6 +88,8 @@ export default class Parser {
                 buffer = `<span class="keyword1">${buffer}</span>`;
             else if (this.commands.indexOf(buffer) >= 0)
                 buffer = `<span class="keyword2">${buffer}</span>`;
+            else if (this.objects.indexOf(buffer) >= 0)
+                buffer = `<span class="object">${buffer}</span>`;
             else if (xchar == '(' && t == def)
                 (buffer = `<span class="function">${buffer}</span>`),
                     (char = '');

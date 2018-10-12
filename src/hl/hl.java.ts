@@ -1,10 +1,11 @@
 export var hl = `
 define extension "py"
 
-set comment.inline "#"
+set comment.reverseOnClose "/*"
+set comment.inline "//"
 
-set string.inline "'"
-set string.inline "\\""
+set string "'"
+set string "\\""
 
 set operator ";"
 set operator ","

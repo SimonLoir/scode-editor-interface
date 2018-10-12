@@ -15,6 +15,7 @@ export default class Highlighter {
         code: string,
         isInputEvent?: boolean
     ) {
+        element.addClass('default2');
         element.html(jsParser.highlight(code));
         return true;
     }
@@ -33,6 +34,7 @@ export default class Highlighter {
         code: string,
         isInputEvent?: boolean
     ) {
+        element.addClass('default2');
         element.html(javaParser.highlight(code));
         return true;
     }

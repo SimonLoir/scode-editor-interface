@@ -70,7 +70,7 @@ export default class Parser {
         return isFound;
     }
 
-    public buildHighlighter(text: string) {
+    public highlight(text: string) {
         const def = 'd';
         const str = 's';
         const comment = 'c';

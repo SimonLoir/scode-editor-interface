@@ -167,7 +167,7 @@ export default class {
         });
 
         let select = this.e.child('select');
-        [this.type, 'js', 'html', 'py'].forEach(e => {
+        [this.type, 'js', 'html', 'py', 'java'].forEach(e => {
             select
                 .child('option')
                 .text(e)

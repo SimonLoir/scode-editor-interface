@@ -62,5 +62,5 @@ set command "try"
 set command "from"
 set command "while"
 
-set object "console"
+#set object "console"
 `;

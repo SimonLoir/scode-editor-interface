@@ -29,6 +29,7 @@ set operator "*"
 set operator "/"
 set operator ":"
 set operator " "
+set operator "\\t"
 
 set keyword "class"
 set keyword "const"

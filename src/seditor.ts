@@ -7,8 +7,11 @@ export default class {
     private lines: ExtJsObject;
     private type: string;
     private hl: (element: ExtJsObject, code: string, isInput?: boolean) => void;
-    constructor(e: any) {
+    private lineUpdate: () => void;
+    constructor(e: any, update: () => void = undefined) {
+        this.lineUpdate = update;
         this.e = $(e);
+
         if (this.e.attr('data-type') != '')
             this.type = this.e.attr('data-type');
         if (this.type == undefined) this.type = 'js';
@@ -27,10 +30,22 @@ export default class {
 
     public init(default_text: string = '') {
         this.hl = h.chooseHighlighter(this.type);
-        this.e.html('');
 
         if (window.getComputedStyle(this.e.get(0)).position == 'static')
             this.e.css('position', 'relative');
+
+        if (this.e.children('.code-editor-colors').exists(0)) {
+            let text = '';
+            let divs = this.e
+                .children('.code-editor-colors')
+                .children('.scode-editor-line');
+            divs.forEach(function(i) {
+                text += $(this).text() + (i + 1 != divs.count() ? '\n' : '');
+            });
+            default_text = text;
+        }
+
+        this.e.html('');
 
         let textarea: ExtJsObject = this.e.child('div');
         textarea.addClass('code-editor-colors');
@@ -51,15 +66,18 @@ export default class {
             if (numbers.count() > nbr_of_lines) numbers.remove(-2);
             else if (numbers.count() < nbr_of_lines)
                 lines.child('div').text(nbr_of_lines.toString());
+            if (this.lineUpdate) this.lineUpdate();
         };
 
         textarea.get(0).onscroll = function() {
             lines.get(0).scrollTop = this.scrollTop;
         };
 
-        let spl = default_text.split(/\r?\n/);
+        let spl = default_text.split(/\r\n|\r|\n/g);
         spl.forEach(e => {
-            this.line(textarea.child('div'));
+            let x = this.line(textarea.child('div'));
+            this.hl(x, e);
+            updateLN();
         });
 
         textarea
@@ -149,7 +167,7 @@ export default class {
         });
 
         let select = this.e.child('select');
-        [this.type, 'js', 'html'].forEach(e => {
+        [this.type, 'js', 'html', 'py'].forEach(e => {
             select
                 .child('option')
                 .text(e)
@@ -160,16 +178,25 @@ export default class {
             this.init();
             this.e.attr('data-type', this.type);
         });
+        if (this.lineUpdate)
+            requestAnimationFrame(() => {
+                this.lineUpdate();
+            });
     }
 
-    private line(e: ExtJsObject) {
-        e.addClass('scode-editor-line')
+    private line(e: ExtJsObject): ExtJsObject {
+        return e
+            .addClass('scode-editor-line')
             .attr('contenteditable', 'true')
             .css('white-space', 'pre');
     }
 
     public getContent() {
         return this.editor.text();
+    }
+
+    public set lineUpdated(update: () => void) {
+        this.lineUpdate = update;
     }
 }
 

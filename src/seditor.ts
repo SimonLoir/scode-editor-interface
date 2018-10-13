@@ -111,30 +111,44 @@ export default class {
                 } else {
                     new_line = textarea.child('div').get(0);
                 }
-                //toolkit.setSelectionRange(target, pos, target.innerText.length);
+
+                let spaces =
+                    target.innerText.length -
+                    target.innerText.trimLeft().length;
 
                 let nl_text = target.innerText.substring(
                     pos,
                     target.innerText.length
                 );
                 target.innerText = target.innerText.substring(0, pos);
-                new_line.innerText = nl_text;
+
+                console.log('dealing with ' + spaces + ' spaces ');
+
+                //@ts-ignore
+                console.log(' '.repeat(spaces) + nl_text);
+
+                new_line.innerText =
+                    //@ts-ignore
+                    ' '.repeat(spaces) + nl_text;
+
                 this.line($(new_line));
                 new_line.focus();
                 this.hl($(target), target.innerText);
                 this.hl($(new_line), new_line.innerText);
-                toolkit.setCaretPos(new_line, 0);
+                toolkit.setCaretPos(new_line, spaces);
                 updateLN();
             } else if (e.keyCode == 8) {
                 let target: HTMLDivElement = this.getTarget(e);
                 let tpos = toolkit.getCursorPosition(target);
                 e.stopPropagation();
-                if (tpos == 0 || !tpos)
+                console.log(tpos);
+                if (tpos == 0 || tpos == undefined)
                     if (target != textarea.children('div').get(0)) {
                         e.preventDefault();
 
                         let prev = target.previousSibling;
-                        if (target.innerText == '') {
+                        console.log(target, target.innerText);
+                        if (target.innerText.replace(/\r\n|\r|\n/g, '') == '') {
                             console.log('d');
                             $(target).remove();
                             updateLN();
@@ -163,6 +177,15 @@ export default class {
                         this.hl($(prev), prev.innerText);
                         toolkit.setCaretPos(prev, pos);
                     }
+            } else if (e.keyCode == 9) {
+                e.preventDefault();
+                e.stopPropagation();
+                document.execCommand('insertText', true, '    ');
+                let target: HTMLDListElement = this.getTarget(e);
+                let pos = toolkit.getCursorPosition(target);
+                //@ts-ignore
+                this.hl($(target), target.innerText);
+                toolkit.setCaretPos(target, pos);
             }
         });
 

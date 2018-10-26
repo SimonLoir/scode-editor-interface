@@ -113,8 +113,7 @@ export default class {
                 }
 
                 let spaces =
-                    target.innerText.length -
-                    target.innerText.trimLeft().length;
+                    target.innerText.length - trimLeft(target.innerText).length;
 
                 let nl_text = target.innerText.substring(
                     pos,
@@ -345,4 +344,9 @@ function getTextNodesIn(node: any) {
         }
     }
     return textNodes;
+}
+
+function trimLeft(str: string) {
+    const r = /^\s+/;
+    return str.replace(r, '');
 }

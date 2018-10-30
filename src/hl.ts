@@ -1,9 +1,9 @@
-//@ts-nocheck
 import { ExtJsObject } from './extjs';
 import Parser from './parser';
 import { hl as hljs } from './hl/hl.js';
 import { hl as hlpy } from './hl/hl.py';
 import { hl as hljava } from './hl/hl.java';
+import xmlParser from './hl/hl.xml';
 let jsParser = new Parser(hljs);
 let pyParser = new Parser(hlpy);
 let javaParser = new Parser(hljava);
@@ -43,7 +43,10 @@ export default class Highlighter {
         element: ExtJsObject,
         code: string,
         isInputEvent?: boolean
-    ) {}
+    ) {
+        element.html(xmlParser(code));
+        return true;
+    }
 
     public static chooseHighlighter(type: string) {
         if (['js', 'json', 'ts'].indexOf(type) >= 0) {

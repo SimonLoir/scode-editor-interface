@@ -17,4 +17,6 @@ $color-function: rgb(220, 220, 170);
 $color-string: rgb(206, 145, 120);
 $color-comment: rgb(96, 139, 78);
 $color-operators: rgb(212, 212, 212);
+$color-xml-tag: rgb(86, 156, 214);
+$color-xml-attr: rgb(156, 220, 254);
 @import 'highlight';

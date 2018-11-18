@@ -34,7 +34,10 @@ export default class {
         if (window.getComputedStyle(this.e.get(0)).position == 'static')
             this.e.css('position', 'relative');
 
-        if (this.e.children('.code-editor-colors').exists(0)) {
+        if (
+            this.e.children('.code-editor-colors').exists(0) &&
+            default_text == ''
+        ) {
             let text = '';
             let divs = this.e
                 .children('.code-editor-colors')

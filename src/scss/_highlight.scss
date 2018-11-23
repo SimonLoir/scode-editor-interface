@@ -3,6 +3,7 @@
 }
 
 .line-numbers {
+    font-weight: $default-editor-font-weight;
     position: absolute;
     top: 0;
     left: 0;
@@ -33,6 +34,7 @@
 }
 
 .code-editor-colors {
+    font-weight: $default-editor-font-weight;
     text-align: left;
     @if $text-editor-shadow !='none' {
         -webkit-text-stroke: 1px $text-editor-shadow;

@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css?family=Source+Code+Pro');
 $scode-caret-color: white;
-$font-family: 'source-code-pro';
+$font-family: Consolas;
 $code-editor-color: rgba(255, 255, 255, 0.25);
 $code-editor-default-color: white;
-$editor-default-font-size: 18px;
+$editor-default-font-size: 20px;
 $text-editor-shadow: 'none';
 $code-editor-default-background: rgb(30, 30, 30);
 $line-numbers-color: rgba(255, 255, 255, 0.15);
@@ -19,4 +19,5 @@ $color-comment: rgb(96, 139, 78);
 $color-operators: rgb(212, 212, 212);
 $color-xml-tag: rgb(86, 156, 214);
 $color-xml-attr: rgb(156, 220, 254);
+$default-editor-font-weight: 500;
 @import 'highlight';
